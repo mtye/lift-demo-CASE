@@ -1,0 +1,62 @@
+This is a demo application for the Lift web framework:
+
+  http://liftweb.net/
+
+The most up-to-date version is available at:
+
+  http://github.com/mtye/lift-demo-CASE
+
+This demo application was the basis of a presentation to the Chicago Area Scala
+Enthusiasts (CASE) user group on February 18, 2010. You can find more
+information about CASE at these web sites:
+
+  http://groups.google.com/group/chicagoscala
+  http://www.meetup.com/chicagoscala/
+
+The methodology of the presentation was to briefly demonstrate a completed web
+application, then use Git to "reset" the source tree to a blank application
+template, explain the basic features of Lift, and then progressively add
+features by "fast-forwarding" through the application's development with Git,
+eventually arriving at the completed application demonstrated at the beginning
+of the presentation.
+
+The "completed" - i.e., the most recent - version of the demo app is found in
+the "master" branch, and the starting point - a "Hello World" application
+generated from the "lift-archetype-basic" Maven archetype - is available in the
+"step0" branch. The other "step" branches - step1, step2, step3, etc. - are
+incremental snapshots taken of the app after each new feature was added. Thus
+the step1 branch is based upon the "Hello World" app in step0, the step2 branch
+adds a feature to the step1 branch, and so on. By switching between branches
+with Git, you can run, examine, and experiment with the app at each stage of
+development.
+
+An explanation of the changes made to each branch is available in the NOTES file
+located in the root directory of the project.
+
+To build and compile this application, you will need a Java JDK and Maven. If
+you have followed the "Getting Started with Lift" instructions at:
+
+  http://liftweb.net/docs/getting_started.html
+
+and successfully created and run the "Hello World" app, you should be all set.
+
+To switch between the incremental snapshots, you will need to install Git (if
+you haven't already) and know how to use "git branch" and "git checkout"
+commands. The manual pages for "branch" and "checkout" can be found here:
+
+  http://www.kernel.org/pub/software/scm/git/docs/git-branch.html
+  http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html
+
+If you are new to Git, you should start with either of these tutorials:
+
+  http://learn.github.com/p/intro.html http://progit.org/book/
+
+I hope you find this demo application helpful and informative. Please send any
+feedback to work (at) marktye (dot) com.
+
+Copyright © 2010 Mark Tye
+
+This work is licensed under the Creative Commons Attribution-Noncommercial-Share
+Alike 3.0 United States License. To view a copy of this license, visit
+
+  http://creativecommons.org/licenses/by-nc-sa/3.0/us/
