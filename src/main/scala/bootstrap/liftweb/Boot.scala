@@ -36,6 +36,7 @@ class Boot {
 
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) ::
+                  Menu(Loc("create giveaway", List("giveaway", "create"), "Create New Giveaway")) ::
                   User.sitemap
 
     LiftRules.setSiteMap(SiteMap(entries:_*))

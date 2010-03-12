@@ -36,6 +36,36 @@ used in this case, "lift-demo-CASE", is somewhat inelegant, so the default
 template and home page were changed to use the title "RHCP" instead.
 
 
+ * Notes for Step 2
+
+The first feature for the Giveaway application is a page for creating new
+giveaways. A template named "create.html" was created in the
+"src/main/webapp/giveaway" directory. This template uses the "lift:surround"
+tag to embed its content within the default template, thus retaining the same
+layout, styling, and menu as the home page.
+
+The "<lift:Giveaway.create>" tag in the template references a method named
+"create" in the "Giveaway" snippet, which is in the com.marktye.rhcp.snippet
+package. This method binds dynamic content to tags within the
+"<lift:Giveaway.create>" tag. The "<g:name>" tag is bound to an "input" form
+element of type "text", the "<g:description>" tag is bound to a "textarea"
+form element, and the "<g:submit>" tag is bound to a submit button.
+
+The form elements are generated with the net.liftweb.http.SHtml object, which
+has a wide variety of helper methods for creating HTML markup. The second
+parameter to the "text" and "textarea" methods is a function that will be
+invoked when the form is submitted. These functions are used to capture the
+values of the input and textarea elements and assign them to local variables.
+The second parameter to the "submit" method is also a function that is invoked
+when the form is submitted. It sends a success message to the notification area
+below the menu and redirects the user to the home page.
+
+Finally, a menu item for the new page was created in the Boot.scala file and
+added to the list of menu entries. The menu item tells Lift to make the new
+page accessible at a relative URL of "giveaway/create" and display a
+corresponding menu link with the title "Create New Giveaway".
+
+
  * Copyright and License
 
 Copyright © 2010 Mark Tye
