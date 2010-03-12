@@ -104,6 +104,16 @@ menu item has a title of "List Giveaways" and links to the relative URL
 "giveaway/list".
 
 
+ * Notes for Step 4
+
+The "ifLoggedIn" test was added to the Boot.scala file. This test has a
+function that yields "true" if the current User is logged in and "false"
+otherwise, and a message that will be displayed in the notification area if a
+user who is not logged in attempts to access a menu item protected by the
+test. The test is used to secure the "Create New Giveaway" and "List Giveaway"
+pages.
+
+
  * Copyright and License
 
 Copyright © 2010 Mark Tye

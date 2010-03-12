@@ -34,10 +34,12 @@ class Boot {
     LiftRules.addToPackages("com.marktye.rhcp")
     Schemifier.schemify(true, Log.infoF _, User)
 
+    val ifLoggedIn = If(() => User.loggedIn_?, strToFailMsg("Please log in"))
+
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) ::
-                  Menu(Loc("create giveaway", List("giveaway", "create"), "Create New Giveaway")) ::
-                  Menu(Loc("list giveaways", List("giveaway", "list"), "List Giveaways")) ::
+                  Menu(Loc("create giveaway", List("giveaway", "create"), "Create New Giveaway", ifLoggedIn)) ::
+                  Menu(Loc("list giveaways", List("giveaway", "list"), "List Giveaways", ifLoggedIn)) ::
                   User.sitemap
 
     LiftRules.setSiteMap(SiteMap(entries:_*))
