@@ -66,6 +66,44 @@ page accessible at a relative URL of "giveaway/create" and display a
 corresponding menu link with the title "Create New Giveaway".
 
 
+ * Notes for Step 3
+
+In this step, a page was created to display the giveaways. A template named
+"list.html" was created in the giveaway directory. Just as in the previous
+chapter, the "lift:surround" tag embeds this template within the default
+template.
+
+The "<lift:Giveaway.list>" tag links the template to the "list" method in the
+Giveaway snippet, which generates all the dynamic content within the tag. The
+giveaways are displayed in an HTML table, with the name in the first column
+and the description in the second column.
+
+In order to display the giveaways, the application must keep track of them as
+they are created. To do this, a Giveaway companion object was created and
+given a variable that stores giveaways as a list of (String, String) pairs.
+Since companion objects are singletons, this list of giveaways is accessible
+to all instances of the Giveaway snippet.
+
+The "create" method in the Giveaway snippet was modified to add each newly-
+created giveaway to the companion object's list of giveaways. The method's
+redirect was also changed to send the user to the giveaway list page after
+each new giveaway is created.
+
+In the "list" method, each giveaway in the companion object's list is mapped
+to the result of a "bind" method, which binds the "<g:name/>" tag in the
+template to the giveaway's name, and the "<g:description/>" tag to the
+description. The "chooseTemplate" method in the bind sets the binding context
+to the "<g:giveaways>" tag. The net result is that the content outside the
+<g:giveaways> tag - i.e., the <table>, <thead> and <tbody> tags - is preserved
+as-is, while the content inside the "<g:giveaways>" tag is repeated for
+each giveaway in the list, with the name and description tags bound to the
+appropriate value for each giveaway.
+
+Finally, a menu item for the list page was added to the Boot.scala file. The
+menu item has a title of "List Giveaways" and links to the relative URL
+"giveaway/list".
+
+
  * Copyright and License
 
 Copyright © 2010 Mark Tye

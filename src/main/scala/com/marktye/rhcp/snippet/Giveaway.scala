@@ -16,8 +16,9 @@ class Giveaway {
     var name = ""
     var description = ""
     def createGiveaway() = {
+      Giveaway.giveaways = (name, description) :: Giveaway.giveaways
       S.notice("Giveaway created!")
-      S.redirectTo("/index")
+      S.redirectTo("/giveaway/list")
     }
     bind("g", context,
       "name" -> SHtml.text(name, name = _),
@@ -25,4 +26,21 @@ class Giveaway {
       "submit" -> SHtml.submit("Create", createGiveaway)
     )
   }
+
+  def list(context: NodeSeq): NodeSeq = {
+    def giveaways = Giveaway.giveaways.flatMap {
+      case (name, description) =>
+        bind("g", chooseTemplate("g", "giveaways", context),
+             "name" -> name,
+             "description" -> description
+        )
+    }
+    bind("g", context, "giveaways" -> giveaways)
+  }
+}
+
+object Giveaway {
+
+  var giveaways: List[(String, String)] = Nil
+
 }
