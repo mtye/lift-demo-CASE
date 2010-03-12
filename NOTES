@@ -29,6 +29,12 @@ The application does not serve any static files, so the "static" directory
 under src/main/webapp was deleted, along with the corresponding menu entry in
 the Boot.scala file.
 
+The "lift-archetype-basic" archetype uses the artifactId specified in the
+generation process to customize several elements of the application's "chrome",
+e.g., the home page, the default page title, and the header. The artifactId
+used in this case, "lift-demo-CASE", is somewhat inelegant, so the default
+template and home page were changed to use the title "RHCP" instead.
+
 
  * Copyright and License
 
