@@ -16,6 +16,7 @@ class Giveaway {
   def create(context: NodeSeq): NodeSeq = {
     val giveaway = new model.Giveaway
     def createGiveaway() = {
+      giveaway.giver(model.User.currentUser.open_!)
       giveaway.save
       S.notice("Giveaway created!")
       S.redirectTo("/giveaway/list")
@@ -31,6 +32,7 @@ class Giveaway {
     def giveaways = model.Giveaway.findAll.flatMap { giveaway =>
       bind("g", chooseTemplate("g", "giveaways", context),
            "name" -> giveaway.name,
+           "giver" -> giveaway.giver.name("Nobody"),
            "description" -> giveaway.description
       )
     }

@@ -14,6 +14,9 @@ class Giveaway extends LongKeyedMapper[Giveaway] with IdPK {
 
   object name extends MappedText(this)
   object description extends MappedTextarea(this, 512)
+  object giver extends MappedLongForeignKey(this, User) {
+    def name(default: String) = obj.dmap(default)(_.shortName)
+  }
 }
 
 object Giveaway extends Giveaway with LongKeyedMetaMapper[Giveaway]

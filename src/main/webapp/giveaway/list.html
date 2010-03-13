@@ -3,12 +3,13 @@
  Share Alike 3.0 United States License. To view a copy of this license, visit
  http://creativecommons.org/licenses/by-nc-sa/3.0/us/ -->
 <lift:surround with="default" at="content">
-  <div class="span-12 last">
+  <div class="span-15 last">
     <lift:Giveaway.list>
       <table>
         <thead>
           <tr>
             <th class="span-2">Name</th>
+            <th class="span-3">Giver</th>
             <th class="span-10 last">Description</th>
           </tr>
         </thead>
@@ -16,6 +17,7 @@
           <g:giveaways>
           <tr>
             <td class="span-2"><g:name/></td>
+            <td class="span-3"><g:giver/></td>
             <td class="span-10 last"><g:description/></td>
           </tr>
           </g:giveaways>
