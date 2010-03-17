@@ -29,9 +29,12 @@ class Giveaway {
   }
 
   def list(context: NodeSeq): NodeSeq = {
+    def enterNotice = S.notice("Giveaway entered!")
+    def withdrawNotice = S.notice("Giveaway withdrawn from!")
     def giveaways = model.Giveaway.findAll.flatMap { giveaway =>
       bind("g", chooseTemplate("g", "giveaways", context),
            "name" -> giveaway.name,
+           "status" -> giveaway.status(enterNotice _, withdrawNotice _),
            "giver" -> giveaway.giver.name("Nobody"),
            "description" -> giveaway.description
       )

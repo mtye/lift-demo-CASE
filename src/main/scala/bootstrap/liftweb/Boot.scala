@@ -32,7 +32,7 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("com.marktye.rhcp")
-    Schemifier.schemify(true, Log.infoF _, User, Giveaway)
+    Schemifier.schemify(true, Log.infoF _, User, Giveaway, Entrant)
 
     val ifLoggedIn = If(() => User.loggedIn_?, strToFailMsg("Please log in"))
 

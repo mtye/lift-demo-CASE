@@ -182,6 +182,73 @@ In the "list" template, a new column was added to the table to display the
 giver's name with the new "<g:giver>" tag.
 
 
+ * Notes for Step 7
+
+In this step, users were given the ability to enter or withdraw from a
+giveaway. This required establishing a many-to-many relationship between Users
+and Giveaways.
+
+A mapper class named "Entrant" was created with two fields: user and giveaway.
+The "user" field creates a many-to-one relationship with the User mapper
+class, and the "giveaway" field creates a many-to-one relationship with the
+Giveaway mapper. Each Entrant thus represents a combination of a user and a
+giveaway. This combination needs to be unique - otherwise, a user could enter
+a giveaway multiple times - so a UniqueIndex was created and added to list of
+dbIndexes on the Entrant companion object to enforce the uniqueness of each
+user-giveaway combination.
+
+The "entrants" field was added to the Giveaway mapper class. The entrants
+field extends MappedManyToMany, and is parameterized with the mapper class
+that holds the many-to-many relationship (Entrant), the field on Entrant that
+holds a reference to this mapper class (Entrant.giveaway), the field that
+holds a reference to the other side of the many-to-many relationship
+(Entrant.user), and the mapper class on the other side of the many-to-many
+(User).
+
+The "entrants" fields of the Giveaway mapper has a helper method named
+"containsCurrentUser" that determines whether the currently logged-in user is
+entered in the giveaway. This method takes advantage of the fact that
+MappedManytoMany implements the Collection trait. If a user is logged in, the
+method checks whether the collection of entrants contains that user. If no
+user is logged in, it returns "false" by default.
+
+Two more helper methods named "enterCurrentUser" and "withdrawCurrentUser"
+were added to Giveaway to facilitate adding and removing the currently
+logged-in user from the collection of entrants. The "save" operation persists
+the modified collection after the user has been added or removed.
+
+To enable users to enter or withdraw from a giveaway, the "enterButton" and
+"withdrawButton" methods were added. These methods generate submit buttons
+that can be inserted into an HTML form and, when clicked, call the appropriate
+method on a reloaded version of the giveaway to add or remove the current user
+from the collection of entrants. The giveaway is reloaded from the database
+because the collection of entrants might change during the interval between
+the generation of a button and when it is clicked - most likely because the
+same user has multiple browser windows or tabs open, or resubmits a form POST.
+These methods also take as a parameter a function that will be executed after
+the current user is entered or withdrawn. This can be used, among other
+things, to specify a message to be displayed in the notification area.
+
+The new "status" method checks whether the currently logged-in user is entered
+in the giveaway and returns the appropriate type of submit button - "Withdraw"
+for entered users, "Enter" for users who are not entered - that allows users to
+change their status.
+
+A new binding was added to the list method in the Giveaway snippet, binding
+the "status" tag to the status method on the Giveaway mapper. The status
+method is given one notice to be displayed if the user is entering the
+giveaway, and another if the user is withdrawing.
+
+The list template was modified to allow users to enter or withdraw from the
+displayed giveaways. A column was added to the table to display a "status"
+button for each giveaway, and the form="POST" attribute was added to the
+"Giveaway.list" tag to enable the use of form elements (like submit buttons)
+within the tag.
+
+Finally, the Entrant class was added to the list of mappers managed by the
+Schemifier in the Boot.scala file.
+
+
  * Copyright and License
 
 Copyright © 2010 Mark Tye

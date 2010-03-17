@@ -7,8 +7,9 @@
 package com.marktye.rhcp.model
 
 import net.liftweb.mapper._
+import net.liftweb.http.SHtml
 
-class Giveaway extends LongKeyedMapper[Giveaway] with IdPK {
+class Giveaway extends LongKeyedMapper[Giveaway] with IdPK with ManyToMany {
 
   def getSingleton = Giveaway
 
@@ -16,6 +17,29 @@ class Giveaway extends LongKeyedMapper[Giveaway] with IdPK {
   object description extends MappedTextarea(this, 512)
   object giver extends MappedLongForeignKey(this, User) {
     def name(default: String) = obj.dmap(default)(_.shortName)
+  }
+  object entrants extends MappedManyToMany(Entrant, Entrant.giveaway, Entrant.user, User) {
+    def containsCurrentUser = User.currentUser.dmap(false)(this.contains(_))
+  }
+
+  def enterCurrentUser() = User.currentUser foreach { user =>
+    entrants + user
+    entrants.save
+  }
+
+  def withdrawCurrentUser() = User.currentUser foreach { user =>
+    entrants -= user
+    entrants.save
+  }
+
+  def status(e: () => Any, w: () => Any) = if (entrants.containsCurrentUser) withdrawButton(w) else enterButton(e)
+
+  def enterButton(f: () => Any) = {
+    SHtml.submit("Enter", () => { reload.enterCurrentUser(); f() })
+  }
+
+  def withdrawButton(f: () => Any) = {
+    SHtml.submit("Withdraw", () => { reload.withdrawCurrentUser(); f() })
   }
 }
 
