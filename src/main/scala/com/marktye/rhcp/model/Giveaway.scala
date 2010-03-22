@@ -41,6 +41,8 @@ class Giveaway extends LongKeyedMapper[Giveaway] with IdPK with ManyToMany {
   def withdrawButton(f: () => Any) = {
     SHtml.submit("Withdraw", () => { reload.withdrawCurrentUser(); f() })
   }
+
+  def link = <a href={"detail/" + id.is}>{name}</a>
 }
 
 object Giveaway extends Giveaway with LongKeyedMetaMapper[Giveaway]

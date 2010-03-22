@@ -34,12 +34,18 @@ class Boot {
     LiftRules.addToPackages("com.marktye.rhcp")
     Schemifier.schemify(true, Log.infoF _, User, Giveaway, Entrant)
 
+    LiftRules.statelessRewrite.append {
+      case RewriteRequest(ParsePath(List("giveaway", "detail", id), _, _, _), _, _) =>
+        RewriteResponse(List("giveaway", "detail"), Map("id" -> id))
+    }
+
     val ifLoggedIn = If(() => User.loggedIn_?, strToFailMsg("Please log in"))
 
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) ::
                   Menu(Loc("create giveaway", List("giveaway", "create"), "Create New Giveaway", ifLoggedIn)) ::
                   Menu(Loc("list giveaways", List("giveaway", "list"), "List Giveaways", ifLoggedIn)) ::
+                  Menu(Loc("giveaway detail", List("giveaway", "detail"), "Detail", Hidden, ifLoggedIn)) ::
                   User.sitemap
 
     LiftRules.setSiteMap(SiteMap(entries:_*))

@@ -1,0 +1,31 @@
+<!-- Copyright © 2010 Mark Tye
+ This work is licensed under the Creative Commons Attribution-Noncommercial-
+ Share Alike 3.0 United States License. To view a copy of this license, visit
+ http://creativecommons.org/licenses/by-nc-sa/3.0/us/ -->
+<lift:surround with="default" at="content">
+  <head>
+  <style type="text/css">
+    /* <![CDATA[ */
+      #name, #giver, #status, #description {
+        margin-bottom: 6px;
+      }
+    /* ]]> */
+    </style>
+  </head>
+  <lift:Giveaway.detail form="POST">
+    <label for="name" class="column span-2">Name</label>
+    <div   id="name" class="span-15 last"><g:name/></div>
+    <label for="status" class="column span-2">Status</label>
+    <div   id="status" class="span-15 last"><g:status/></div>
+    <label for="giver" class="column span-2">Giver</label>
+    <div   id="giver" class="span-15 last"><g:giver/></div>
+    <label for="description" class="column span-2">Description</label>
+    <div   id="description" class="span-15 last"><g:description/></div>
+    <label class="column span-17 last">Entrants</label>
+    <g:entrants>
+      <g:entrant>
+        <div class="prepend-2 span-15 last"><g:name/></div>
+      </g:entrant>
+    </g:entrants>
+  </lift:Giveaway.detail>
+</lift:surround>
