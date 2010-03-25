@@ -45,6 +45,7 @@ class Giveaway {
             "name" -> giveaway.name,
             "status" -> giveaway.status(enterNotice _, withdrawNotice _),
             "giver" -> giveaway.giver.name("Nobody"),
+            "winner" -> giveaway.chooseWinner(() => S.notice("Winner chosen!")),
             "description" -> giveaway.description,
             "entrants" -> entrants
           )

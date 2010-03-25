@@ -281,6 +281,74 @@ named "id") that the Giveaway snippet's detail method uses to retrieve the
 appropriate giveaway from the database.
 
 
+ * Notes for Step 9
+
+In this step, the creator of a giveaway was given the ability to choose a
+winner at random from among the entrants.
+
+A helper method named "isCurrentUser" was added to the "giver" field of the
+Giveaway mapper class to determine whether the currently logged-in user is the
+creator of the giveaway.
+
+A helper method named "random" was added to the "entrants" field of the
+Giveaway mapper class to enable the selection of a random entrant. The method
+returns either an Option containing a randomly-selected entrant, or None if
+no users have entered the giveaway.
+
+A new field named "winner" was added to the Giveaway mapper class. The
+"winner" field extends MappedLongForeignKey, creating a many-to-one
+relationship between the Giveaway and User mapper classes, just like the
+"giver" field. The user assigned to this field is deemed to have "won" the
+giveaway. As with the "giver" field, "winner" has a helper method for
+accessing the winning user's name. It also has an "isCurrentUser" method that
+determines whether the currently logged-in user is the winner of the giveaway,
+and a "notChosenYet" method that determines whether no winner has been
+chosen yet. If no user has been assigned to the "winner" field, the field's
+"choose" method assigns a randomly-selected entrant to the field and saves the
+it to the database.
+
+The "enterCurrentUser" and "withdrawCurrentUser" methods of the Giveaway
+mapper were modified to prevent a user from entering or withdrawing from a
+giveaway after a winner has been chosen.
+
+A "randomEntrant" method was added to the Giveaway mapper to facilitate the
+selection of a winner for the giveaway. It returns a user selected at random
+from among the giveaway's entrants, or if the giveaway has no entrants, it
+returns the user who created the giveaway.
+
+The "status" method of the Giveaway mapper was modified to prevent users from
+entering or withdrawing from a contest after a winner has been chosen. If no
+winner has been chosen yet, the method returns, as it did before, a submit
+button that either enters or withdraws the user from the giveaway. After a
+winner has been chosen, though, it returns a text element indicating whether
+the user has won, lost, or never entered the giveaway.
+
+A "chooseWinner" method was added to the Giveaway mapper to generate an HTML
+form element for displaying the winner's name or allowing the giver to choose
+a winner at random. If the currently logged-in user is the giver and no winner
+has yet been chosen, the method returns a submit button that will choose a
+winner at random when clicked. Otherwise, it returns a text element containing
+either the winner's name or a non-breaking space if no winner has been chosen
+yet.
+
+A "chooseWinnerButton" method was added to the Giveaway mapper to generate a
+submit button for choosing a random winner. When clicked, the button chooses a
+randomly-selected winner from among the giveaway's entrants and then calls the
+function that was passed to it as a parameter.
+
+A random number generator was added to the Giveaway companion object to
+facilitate the selection of random entrants.
+
+The detail template was modified to display the giveaway's winner and allow
+the giver to select a winner at random. A "winner" tag was added to the
+template, and the "detail" method of the Giveaway snippet was modified to bind
+the "winner" tag to the Giveaway mapper class's "chooseWinner" method, which
+generates a form element that either displays the winner's name or allows the
+user to randomly select a winner. The binding passes a function to
+"chooseWinner" that displays a message in the notification area when a winner
+is chosen.
+
+
  * Copyright and License
 
 Copyright © 2010 Mark Tye
