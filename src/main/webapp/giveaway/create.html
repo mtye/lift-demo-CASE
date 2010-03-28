@@ -15,6 +15,9 @@
       #name input {
         width: 396px;
       }
+      #deadline input {
+        width: 25px;
+      }
     /* ]]> */
     </style>
   </head>
@@ -22,6 +25,8 @@
   <lift:Giveaway.create form="POST">
     <label for="name" class="column span-2">Name</label>
     <div id="name" class="column span-15 last"><g:name/></div>
+    <label for="deadline" class="column span-2">Deadline</label>
+    <div id="deadline" class="column span-15 last"><g:deadline/></div>
     <label for="description" class="column span-2">Description</label>
     <div id="description" class="column span-15 last"><g:description/></div>
     <div class="prepend-2 span-2 last"><g:submit/></div>

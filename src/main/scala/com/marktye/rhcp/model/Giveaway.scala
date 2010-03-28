@@ -6,6 +6,7 @@
  */
 package com.marktye.rhcp.model
 
+import com.marktye.rhcp.mapper.MappedRelativeDate
 import net.liftweb.mapper._
 import net.liftweb.http.SHtml
 import scala.util.Random
@@ -25,28 +26,32 @@ class Giveaway extends LongKeyedMapper[Giveaway] with IdPK with ManyToMany {
     def random = if (isEmpty) None else Some(this(Giveaway.random.nextInt(length)))
   }
   object winner extends MappedLongForeignKey(this, User) {
-    def name(default: String) = obj.dmap(default)(_.shortName)
-    def isCurrentUser = User.currentUser.dmap(false)(this == _)
+    def name(default: String) = choose().obj.dmap(default)(_.shortName)
+    def isCurrentUser = User.currentUser.dmap(false)(choose() == _)
     def notChosenYet = ! defined_?
     def choose() = {
-      if (notChosenYet) apply(fieldOwner.randomEntrant).save
+      if (notChosenYet && deadline.hasPassed) apply(fieldOwner.randomEntrant).save
       this
     }
   }
+  object deadline extends MappedRelativeDate(this) {
+    def hasPassed = ! inFuture_?
+    def hasNotPassed = inFuture_?
+  }
 
-  def enterCurrentUser() = if (winner.notChosenYet) User.currentUser foreach { user =>
+  def enterCurrentUser() = if (deadline.hasNotPassed) User.currentUser foreach { user =>
     entrants + user
     entrants.save
   }
 
-  def withdrawCurrentUser() = if (winner.notChosenYet) User.currentUser foreach { user =>
+  def withdrawCurrentUser() = if (deadline.hasNotPassed) User.currentUser foreach { user =>
     entrants -= user
     entrants.save
   }
 
   def randomEntrant = entrants.random getOrElse (giver.obj.open_!)
 
-  def status(e: () => Any, w: () => Any) = (winner.notChosenYet, entrants.containsCurrentUser, winner.isCurrentUser) match {
+  def status(e: () => Any, w: () => Any) = (deadline.hasNotPassed, entrants.containsCurrentUser, winner.isCurrentUser) match {
     case (true, true, _) => withdrawButton(w)
     case (true, false, _) => enterButton(e)
     case (false, true, true) => <span>Won</span>
@@ -63,14 +68,6 @@ class Giveaway extends LongKeyedMapper[Giveaway] with IdPK with ManyToMany {
   }
 
   def link = <a href={"detail/" + id.is}>{name}</a>
-
-  def chooseWinner(f: () => Any) = if (winner.notChosenYet && giver.isCurrentUser) chooseWinnerButton(f)
-                                   else <span>{winner.name("\u00A0")}</span>
-
-  def chooseWinnerButton(f: () => Any) = {
-    SHtml.submit("Choose Winner", () => { reload.winner.choose(); f() })
-  }
-
 }
 
 object Giveaway extends Giveaway with LongKeyedMetaMapper[Giveaway] {

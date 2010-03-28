@@ -28,6 +28,7 @@ class Giveaway {
     bind("g", context,
       "name" -> giveaway.name.toForm,
       "description" -> giveaway.description.toForm,
+      "deadline" -> giveaway.deadline.toForm,
       "submit" -> SHtml.submit("Create", createGiveaway)
     )
   }
@@ -44,8 +45,9 @@ class Giveaway {
           bind("g", context,
             "name" -> giveaway.name,
             "status" -> giveaway.status(enterNotice _, withdrawNotice _),
+            "deadline" -> giveaway.deadline.shortFormat,
             "giver" -> giveaway.giver.name("Nobody"),
-            "winner" -> giveaway.chooseWinner(() => S.notice("Winner chosen!")),
+            "winner" -> giveaway.winner.name("\u00A0"),
             "description" -> giveaway.description,
             "entrants" -> entrants
           )
@@ -61,6 +63,7 @@ class Giveaway {
       bind("g", chooseTemplate("g", "giveaways", context),
            "name" -> giveaway.link,
            "status" -> giveaway.status(enterNotice _, withdrawNotice _),
+           "deadline" -> giveaway.deadline.shortFormat,
            "giver" -> giveaway.giver.name("Nobody"),
            "description" -> giveaway.description
       )

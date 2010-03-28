@@ -349,6 +349,76 @@ user to randomly select a winner. The binding passes a function to
 is chosen.
 
 
+ * Notes for Step 10
+
+This step added a "deadline" field to each giveaway, specifying a time after
+which a winner will be automatically chosen and no more entrants can be added
+or withdrawn. This could have been accomplished with Lift's MappedDateTime
+class, but that would have required the user to enter the deadline as a text
+string. Instead, a custom MappedField class was created to display dates in
+formats like "37 seconds from now", "2 hours ago", "5 days, 2 hours, 10
+minutes from now", and simplify the input of dates with the use of a drop-down
+list.
+
+The RelativeDateFormat class was created in the com.marktye.rhcp.text package,
+extending the java.text.DateFormat abstract class. Its "format" method
+calculates the number of milliseconds between the date being formatted and a
+reference epoch, which defaults to the current time if none is specified. The
+milliseconds are partitioned into units of time, which, if not specified,
+default to "year, month, week, day, hour, minute, second". The string
+representations of the units of time are concatenated together and either
+"ago" or "from now" is appended to the result, depending on whether the date
+precedes or follows the epoch.
+
+The MappedRelativeDate class was created in the com.marktye.rhcp.mapper
+package to facilitate the persistence of relative dates like "5 minutes from
+now" and "2 weeks ago" in the database. The "toForm" method generates a text
+input element for entering time quantities and a select element for specifying
+units of time. On form submission, the value of the underlying Date is
+calculated by adding or subtracting the specified amount of time from the
+current time. The "shortFormat" method uses the RelativeDateFormat to display
+the underlying Date in relative terms, using only the most significant unit -
+i.e. "2 hours ago" if the date is 2 hours, 14 minutes and 35 seconds in the
+past.
+
+A "deadline" field extending MappedRelativeDate was added to the Giveaway
+mapper class. The "deadline" field has "hasPassed" and "hasNotPassed" methods
+for determining whether the deadline is before or after the current time.
+
+The "name" method of the "winner" field of the Giveaway mapper was modified to
+select a random winner, if possible, before returning the winner's name.
+Similarly, the field's "isCurrentUser" method was modified to select a winner
+before determining whether the currently logged-in user is the winner. The
+field's "choose" method was modified to only select a random winner after the
+deadline has passed.
+
+The "enterCurrentUser" and "withdrawCurrentUser" methods of the Giveaway
+mapper were modified to prevent users from entering or withdrawing from the
+giveaway after the deadline.
+
+The "status" method of the Giveaway mapper was similarly modified to only
+return an "enter" or "withdraw" submit button before the deadline. After the
+deadline has passed, it returns a "Won", "Lost", or "Not Entered" text
+element.
+
+The "chooseWinner" and "chooseWinnerButton" methods were deleted from the
+Giveaway mapper, since the winner is now automatically selected after the
+deadline passes, rather than when the giver clicks a form submit button.
+
+The deadline was added to the "create", "list", and "detail" templates by
+adding a "<g:deadline>" tag to each template. The tag in the "create" template
+was bound to the deadline field's generated form elements in the "create"
+method of the Giveaway snippet. The tag in the the "list" template was added
+to a new column in the table and bound to the deadline field's "shortFormat"
+method in the "list" method of the Giveaway snippet. The "detail" template's
+tag was bound to the field's "shortFormat" method in the "detail"
+method of the Giveaway snippet.
+
+Finally, the binding of the "winner" tag in the detail method of the Giveaway
+snippet was changed to the winner field's "name" method, defaulting to a
+non-breaking space if no winner has been chosen yet.
+
+
  * Copyright and License
 
 Copyright © 2010 Mark Tye
